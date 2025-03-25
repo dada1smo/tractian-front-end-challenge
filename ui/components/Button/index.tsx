@@ -11,6 +11,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-primary-500 text-white hover:bg-primary-600',
+        inactive: 'bg-primary-900 text-white hover:bg-primary-600',
         destructive:
           'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
         outline:
@@ -22,7 +23,7 @@ const buttonVariants = cva(
       },
       size: {
         default: 'h-9 px-4 py-2',
-        sm: 'h-8 px-3 text-xs',
+        sm: 'h-8 px-3 py-0 text-xs',
         lg: 'h-10 px-8',
         icon: 'h-9 w-9',
       },
@@ -113,18 +114,5 @@ const UIButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 UIButton.displayName = 'UIButton';
-
-// const UIButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
-//   ({ link, asChild, ...props }, ref) => {
-
-//     if (link) {
-//       return (<Link href={link.href} passHref>)
-//     }
-
-//     return <UIButtonBase {...props} ref={ref} />;
-//   }
-// );
-
-// UIButton.displayName = 'UIButton';
 
 export { UIButton, buttonVariants };

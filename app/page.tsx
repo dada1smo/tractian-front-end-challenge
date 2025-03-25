@@ -1,5 +1,5 @@
 import CompanyMenu from '@/modules/companies/components/CompanyMenu';
-import { getCompanies } from '@/modules/companies/services/companies.service';
+import { getCompanies } from '@/modules/companies/services/company.service';
 import UIImage from '@/ui/components/Image';
 
 export default async function HomePage() {

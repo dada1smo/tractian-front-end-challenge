@@ -23,6 +23,9 @@
   --color-primary-500: #2188ff;
   --color-primary-600: rgb(37, 99, 235);
   --color-primary-900: #023b78;
+  --color-header-background: #17192d;
+  --color-background: #e3eaef;
+  --color-border-card: #d8dfe6;
 }
 
 body {
