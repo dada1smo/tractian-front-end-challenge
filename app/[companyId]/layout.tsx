@@ -8,8 +8,8 @@ export default async function CompanyLayout({
   return (
     <div className="h-dvh w-dvw overflow-hidden bg-background flex flex-col">
       <UIHeader />
-      <div className="p-2 flex flex-col items-stretch grow">
-        <div className="bg-white rounded border-1 border-border-card grow p-4">
+      <div className="p-2 flex flex-col items-stretch grow overflow-hidden">
+        <div className="bg-white rounded border-1 border-border-card grow overflow-hidden p-4">
           {children}
         </div>
       </div>
