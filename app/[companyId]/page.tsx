@@ -1,5 +1,5 @@
 import { getAssets } from '@/modules/assets/services/asset.service';
-import AssetTree from '@/modules/global/components/AssetTree';
+import AssetNavigation from '@/modules/global/components/AssetNavigation';
 import { getLocations } from '@/modules/locations/services/location.service';
 import { getRoot } from '@/modules/utils/tree';
 
@@ -15,8 +15,14 @@ export default async function CompanyPage({
   const tree = getRoot(locations, assets);
 
   return (
-    <div className="overflow-y-auto h-full">
-      <AssetTree initialTree={tree} locations={locations} assets={assets} />
+    <div className="grid grid-cols-12 grid-rows-1 gap-4 overflow-hidden h-full">
+      <div className="overflow-hidden col-span-4">
+        <AssetNavigation
+          initialTree={tree}
+          locations={locations}
+          assets={assets}
+        />
+      </div>
     </div>
   );
 }
