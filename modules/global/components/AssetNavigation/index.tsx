@@ -1,30 +1,34 @@
+'use client';
+
 import { AssetType } from '@/modules/assets/types/AssetType';
 import { LocationType } from '@/modules/locations/types/LocationType';
 import { TreeItem } from '@/modules/utils/tree';
 import { FunctionComponent } from 'react';
 import AssetTree from '../AssetTree';
-import UIScrollArea from '@/ui/components/ScrollArea';
+import useAssetSelection from '../../hooks/use-asset-selection';
 
 interface AssetNavigationProps {
-  initialTree: TreeItem[];
+  tree: TreeItem[];
   locations: LocationType[];
   assets: AssetType[];
 }
 
 const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
-  initialTree,
+  tree,
   locations,
   assets,
 }) => {
+  const { selectAsset, selected } = useAssetSelection();
+
   return (
-    <div className="border border-border-card rounded overflow-hidden h-full">
-      <UIScrollArea>
-        <AssetTree
-          initialTree={initialTree}
-          locations={locations}
-          assets={assets}
-        />
-      </UIScrollArea>
+    <div className="border border-border-card rounded overflow-y-auto h-full py-2 px-3">
+      <AssetTree
+        tree={tree}
+        locations={locations}
+        assets={assets}
+        selectAsset={selectAsset}
+        selected={selected}
+      />
     </div>
   );
 };

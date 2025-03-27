@@ -12,17 +12,18 @@ export default async function CompanyPage({
   const locations = await getLocations(companyId);
   const assets = await getAssets(companyId);
 
-  const tree = getRoot(locations, assets);
+  const { root, childrenLocation, childrenAsset } = getRoot(locations, assets);
 
   return (
     <div className="grid grid-cols-12 grid-rows-1 gap-4 overflow-hidden h-full">
       <div className="overflow-hidden col-span-4">
         <AssetNavigation
-          initialTree={tree}
-          locations={locations}
-          assets={assets}
+          tree={root}
+          locations={childrenLocation}
+          assets={childrenAsset}
         />
       </div>
+      <div className="col-span-8 col-start-5">Teste</div>
     </div>
   );
 }

@@ -5,12 +5,16 @@ import { LocationType } from '../locations/types/LocationType';
 export interface TreeItem extends AssetType {
   children: TreeItem[];
   category: TreeCategoryType;
+  lineage: string[];
+  open?: boolean;
+  selected?: boolean;
 }
 
 export function findChildrenAsset(
   data: AssetType[],
   parentId: string,
-  locationId: string
+  locationId: string,
+  lineage: string[]
 ): TreeItem[] {
   return data
     .filter(
@@ -20,51 +24,83 @@ export function findChildrenAsset(
       ...asset,
       children: [],
       category: determineAssetCategory(asset.sensorType),
+      lineage: [...lineage, asset.id],
     }));
 }
 
 export function findChildrenLocation(
   data: LocationType[],
-  parentId: string
+  parentId: string,
+  lineage: string[]
 ): TreeItem[] {
   return data
     .filter((location) => location.parentId === parentId)
-    .map((location) => ({ ...location, children: [], category: 'location' }));
+    .map((location) => ({
+      ...location,
+      children: [],
+      category: 'location',
+      lineage: [...lineage, location.id],
+    }));
 }
 
 export function findChildren(
   locations: LocationType[],
   assets: AssetType[],
   parentId: string,
-  locationId: string
+  locationId: string,
+  lineage: string[]
 ): TreeItem[] {
   return [
-    ...findChildrenLocation(locations, parentId),
-    ...findChildrenAsset(assets, parentId, locationId),
+    ...findChildrenLocation(locations, parentId, lineage),
+    ...findChildrenAsset(assets, parentId, locationId, lineage),
   ];
 }
 
 export function getRoot(
   locations: LocationType[],
   assets: AssetType[]
-): TreeItem[] {
-  const rootLocations = locations
-    .filter((location) => location.parentId === null)
-    .map((location) => ({
-      ...location,
-      children: findChildren(locations, assets, location.id, location.id),
-      category: 'location' as TreeCategoryType,
-    }));
+): {
+  root: TreeItem[];
+  childrenLocation: LocationType[];
+  childrenAsset: AssetType[];
+} {
+  const root: TreeItem[] = [];
+  const childrenLocation: LocationType[] = [];
+  const childrenAsset: AssetType[] = [];
 
-  const rootAssets = assets
-    .filter((asset) => asset.locationId === null && asset.parentId === null)
-    .map((asset) => ({
-      ...asset,
-      children: [],
-      category: determineAssetCategory(asset.sensorType),
-    }));
+  locations.forEach((location) => {
+    if (location.parentId !== null) {
+      return childrenLocation.push(location);
+    }
+    if (location.parentId === null) {
+      return root.push({
+        ...location,
+        children: findChildren(locations, assets, location.id, location.id, [
+          location.id,
+        ]),
+        category: 'location',
+        lineage: [location.id],
+      });
+    }
+  });
 
-  return [...rootLocations, ...rootAssets];
+  assets.forEach((asset) => {
+    if (asset.locationId !== null || asset.parentId !== null) {
+      return childrenAsset.push(asset);
+    }
+    if (asset.locationId === null && asset.parentId === null) {
+      return root.push({
+        ...asset,
+        children: findChildren(locations, assets, asset.id, asset.id, [
+          asset.id,
+        ]),
+        category: determineAssetCategory(asset.sensorType),
+        lineage: [asset.id],
+      });
+    }
+  });
+
+  return { root, childrenLocation, childrenAsset };
 }
 
 export function determineAssetCategory(
@@ -77,19 +113,23 @@ export function determineAssetCategory(
   return 'component';
 }
 
-export function buildTree(data: LocationType[]): TreeItem[] {
-  const children: TreeItem[] = [];
-  const root: TreeItem[] = [];
+// export function buildTree(data: LocationType[]): TreeItem[] {
+//   const children: TreeItem[] = [];
+//   const root: TreeItem[] = [];
 
-  data.forEach((location) => {
-    if (location.parentId !== null) {
-      return children.push({ ...location, children: [], category: 'location' });
-    }
+//   data.forEach((location) => {
+//     if (location.parentId !== null) {
+//       return children.push({ ...location, children: [], category: 'location' });
+//     }
 
-    if (location.parentId === null) {
-      return root.push({ ...location, children: [], category: 'location' });
-    }
-  });
+//     if (location.parentId === null) {
+//       return root.push({ ...location, children: [], category: 'location' });
+//     }
+//   });
 
-  return root;
-}
+//   return root;
+// }
+
+// export function findParents(assetId: string) {
+//   const ids = [assetId];
+// }

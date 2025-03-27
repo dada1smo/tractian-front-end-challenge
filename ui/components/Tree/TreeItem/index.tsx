@@ -6,36 +6,29 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@radix-ui/react-collapsible';
-import { TreeCategoryType } from '@/modules/global/types/CategoryType';
 import Image from 'next/image';
 import styles from './styles.module.css';
+import { TreeItem } from '@/modules/utils/tree';
 
 export interface UITreeItemProps {
   id: string;
   name: string;
-  category: TreeCategoryType;
   children: UITreeItemProps[];
+  lineage: string[];
+  category: string;
   onOpenChange?: () => void;
+  onSelectItem?: (item: TreeItem) => void;
+  isSelected?: boolean;
   content?: ReactNode;
+  iconStart?: string;
+  iconEnd?: string;
+  initial?: boolean;
 }
 
 const UITreeItem: FunctionComponent<{ item: UITreeItemProps }> = ({ item }) => {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(!!item.initial);
 
   const hasChildren = Array.isArray(item.children) && item.children.length > 0;
-
-  const determineIcon = (category: TreeCategoryType) => {
-    switch (category) {
-      case 'location':
-        return '/location.svg';
-      case 'asset':
-        return '/asset.svg';
-      case 'component':
-        return '/component.svg';
-      default:
-        return '/location.svg';
-    }
-  };
 
   return (
     <Collapsible
@@ -45,7 +38,17 @@ const UITreeItem: FunctionComponent<{ item: UITreeItemProps }> = ({ item }) => {
         setOpen(isOpen);
       }}
     >
-      <CollapsibleTrigger className="text-sm flex items-center gap-1 py-1">
+      <CollapsibleTrigger
+        className={`text-sm flex items-center gap-1 py-1 px-2 w-full ${
+          item.isSelected ? 'bg-primary-500' : ''
+        }`}
+        onClick={() => {
+          if (!hasChildren && item.onSelectItem) {
+            item.onSelectItem(item as TreeItem);
+          }
+        }}
+        disabled={item.isSelected}
+      >
         {hasChildren && (
           <Image
             src="/chevron.svg"
@@ -55,13 +58,13 @@ const UITreeItem: FunctionComponent<{ item: UITreeItemProps }> = ({ item }) => {
             className="mr-1"
           />
         )}
-        <Image
-          src={determineIcon(item.category)}
-          alt=""
-          width={16}
-          height={16}
-        />
+        {item.iconStart && (
+          <Image src={item.iconStart} alt="" width={16} height={16} />
+        )}
         {item.name}
+        {item.iconEnd && (
+          <Image src={item.iconEnd} alt="" width={16} height={16} />
+        )}
       </CollapsibleTrigger>
       {hasChildren && (
         <CollapsibleContent
