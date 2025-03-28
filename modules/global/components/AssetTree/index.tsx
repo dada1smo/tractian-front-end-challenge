@@ -51,8 +51,6 @@ const AssetItem: FunctionComponent<{
     return <AssetTreeIcon category={category} isSelected={selected} />;
   };
 
-  console.log(item.status);
-
   const Tree = useMemo(
     () => (
       <AssetTree

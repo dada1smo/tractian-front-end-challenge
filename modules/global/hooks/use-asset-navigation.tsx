@@ -24,7 +24,6 @@ export default function useAssetNavigation() {
       assets: AssetType[]
     ): TreeItem[] => {
       if (!selected) {
-        console.log(tree);
         return tree;
       }
 
