@@ -6,7 +6,7 @@ import Image from 'next/image';
 import NextLink from 'next/link';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xs text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  'inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xs text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
@@ -18,7 +18,7 @@ const buttonVariants = cva(
           'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground',
         secondary:
           'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        ghost: 'text-primary-600 hover:bg-primary-100 justify-start text-left',
         link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {
@@ -26,6 +26,7 @@ const buttonVariants = cva(
         sm: 'h-8 px-3 py-0 text-xs',
         lg: 'h-10 px-8',
         icon: 'h-9 w-9',
+        slim: 'h-8 px-2 py-0 text-xs',
       },
     },
     defaultVariants: {
@@ -93,7 +94,16 @@ const UIButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const Comp = asChild || link ? Slot : 'button';
-    const Link = link ? NextLink : React.Fragment;
+
+    const buttonContent = (
+      <>
+        {icon && icon.position === 'before' && iconComponent(icon.position)}
+        {icon && icon.position === 'center'
+          ? iconComponent(icon.position)
+          : children}
+        {icon && icon.position === 'after' && iconComponent(icon.position)}
+      </>
+    );
 
     return (
       <Comp
@@ -101,13 +111,11 @@ const UIButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        <Link href={link?.href || ''}>
-          {icon && icon.position === 'before' && iconComponent(icon.position)}
-          {icon && icon.position === 'center'
-            ? iconComponent(icon.position)
-            : children}
-          {icon && icon.position === 'after' && iconComponent(icon.position)}
-        </Link>
+        {link?.href ? (
+          <NextLink href={link?.href || ''}>{buttonContent}</NextLink>
+        ) : (
+          buttonContent
+        )}
       </Comp>
     );
   }

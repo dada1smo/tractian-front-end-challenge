@@ -2,12 +2,14 @@
 
 import { AssetType } from '@/modules/assets/types/AssetType';
 import { LocationType } from '@/modules/locations/types/LocationType';
-import { findChildren, TreeItem } from '@/modules/utils/tree';
+import { TreeItem } from '@/modules/utils/tree';
 import UITreeItem from '@/ui/components/Tree/TreeItem';
-import { FunctionComponent, useCallback, useMemo, useState } from 'react';
+import { FunctionComponent, useCallback, useMemo } from 'react';
 import { TreeCategoryType } from '../../types/CategoryType';
 import AssetTreeIcon from '../AssetTreeIcon';
 import AssetStatusIcon from '../AssetStatusIcon';
+import { UIButton } from '@/ui/components/Button';
+import useAssetPagination from '../../hooks/use-asset-pagination';
 
 interface AssetTreeProps {
   tree: TreeItem[];
@@ -87,28 +89,8 @@ const AssetTree: FunctionComponent<AssetTreeProps> = ({
   selectAsset,
   selected,
 }) => {
-  const [currentTree, setCurrentTree] = useState<TreeItem[]>(tree);
-
-  const onOpenChange = (
-    locationData: LocationType[],
-    assetData: AssetType[]
-  ) => {
-    setCurrentTree((prev) => {
-      return prev.map((item) => ({
-        ...item,
-        children: item.children.map((child) => ({
-          ...child,
-          children: findChildren(
-            locationData,
-            assetData,
-            child.id,
-            child.id,
-            child.lineage
-          ),
-        })),
-      }));
-    });
-  };
+  const { currentTree, loadMore, hasMore, loadChildren } =
+    useAssetPagination(tree);
 
   return (
     <div className="flex flex-col gap-1">
@@ -118,11 +100,21 @@ const AssetTree: FunctionComponent<AssetTreeProps> = ({
           item={item}
           locations={locations}
           assets={assets}
-          onOpenChange={onOpenChange}
+          onOpenChange={loadChildren}
           selectAsset={selectAsset}
           selected={selected}
         />
       ))}
+      {hasMore && (
+        <UIButton
+          onClick={loadMore}
+          size="slim"
+          variant="ghost"
+          icon={{ position: 'before', src: '/add.svg', size: 18 }}
+        >
+          Mostrar mais
+        </UIButton>
+      )}
     </div>
   );
 };

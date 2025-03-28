@@ -36,14 +36,16 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
       </div>
       <div className="grid grid-cols-12 gap-4 overflow-hidden h-full grow">
         <div className="overflow-hidden col-span-4">
-          <div className="border border-border-card rounded-xs overflow-y-auto h-full py-2 px-3">
-            <AssetTree
-              tree={tree}
-              locations={locations}
-              assets={assets}
-              selectAsset={selectAsset}
-              selected={selected}
-            />
+          <div className="border border-border-card rounded-xs overflow-hidden h-full">
+            <div className="overflow-y-auto h-full py-2 px-3">
+              <AssetTree
+                tree={tree}
+                locations={locations}
+                assets={assets}
+                selectAsset={selectAsset}
+                selected={selected}
+              />
+            </div>
           </div>
         </div>
         <div className="col-span-8 col-start-5">

@@ -1,0 +1,51 @@
+import { AssetType } from '@/modules/assets/types/AssetType';
+import { LocationType } from '@/modules/locations/types/LocationType';
+import { findChildren, TreeItem } from '@/modules/utils/tree';
+import { useState } from 'react';
+
+export default function useAssetPagination(
+  initialData: TreeItem[],
+  initialCount = 24,
+  increment = 24
+) {
+  const [currentTree, setCurrentTree] = useState<TreeItem[]>(
+    initialData.slice(0, initialCount)
+  );
+
+  const loadMore = () => {
+    const newCount = Math.min(
+      currentTree.length + increment,
+      initialData.length
+    );
+
+    setCurrentTree((prevTree) => {
+      const showNext = initialData.slice(prevTree.length, newCount);
+      return [...prevTree, ...showNext];
+    });
+  };
+
+  const loadChildren = (
+    locationData: LocationType[],
+    assetData: AssetType[]
+  ) => {
+    setCurrentTree((prev) => {
+      return prev.map((item) => ({
+        ...item,
+        children: item.children.map((child) => ({
+          ...child,
+          children: findChildren(
+            locationData,
+            assetData,
+            child.id,
+            child.id,
+            child.lineage
+          ),
+        })),
+      }));
+    });
+  };
+
+  const hasMore = currentTree.length < initialData.length;
+
+  return { currentTree, loadMore, hasMore, loadChildren };
+}
