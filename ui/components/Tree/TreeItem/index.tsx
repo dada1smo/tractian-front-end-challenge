@@ -8,7 +8,6 @@ import {
 } from '@radix-ui/react-collapsible';
 import Image from 'next/image';
 import styles from './styles.module.css';
-import { TreeItem } from '@/modules/utils/tree';
 
 export interface UITreeItemProps {
   id: string;
@@ -17,11 +16,11 @@ export interface UITreeItemProps {
   lineage: string[];
   category: string;
   onOpenChange?: () => void;
-  onSelectItem?: (item: TreeItem) => void;
+  onSelectItem?: (itemId: string, category: string) => void;
   isSelected?: boolean;
   content?: ReactNode;
-  iconStart?: string;
-  iconEnd?: string;
+  iconStart?: ReactNode;
+  iconEnd?: ReactNode;
   initial?: boolean;
 }
 
@@ -39,12 +38,12 @@ const UITreeItem: FunctionComponent<{ item: UITreeItemProps }> = ({ item }) => {
       }}
     >
       <CollapsibleTrigger
-        className={`text-sm flex items-center gap-1 py-1 px-2 w-full ${
-          item.isSelected ? 'bg-primary-500' : ''
+        className={`text-sm text-left flex items-center gap-1 py-1 px-2 w-full transition duration-300 ease-in-out ${
+          item.isSelected ? 'bg-primary-500 text-white' : ''
         }`}
         onClick={() => {
           if (!hasChildren && item.onSelectItem) {
-            item.onSelectItem(item as TreeItem);
+            item.onSelectItem(item.id, item.category);
           }
         }}
         disabled={item.isSelected}
@@ -58,13 +57,9 @@ const UITreeItem: FunctionComponent<{ item: UITreeItemProps }> = ({ item }) => {
             className="mr-1"
           />
         )}
-        {item.iconStart && (
-          <Image src={item.iconStart} alt="" width={16} height={16} />
-        )}
+        {item.iconStart && item.iconStart}
         {item.name}
-        {item.iconEnd && (
-          <Image src={item.iconEnd} alt="" width={16} height={16} />
-        )}
+        {item.iconEnd && item.iconEnd}
       </CollapsibleTrigger>
       {hasChildren && (
         <CollapsibleContent

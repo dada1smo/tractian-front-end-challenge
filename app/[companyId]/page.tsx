@@ -1,4 +1,5 @@
 import { getAssets } from '@/modules/assets/services/asset.service';
+import { getCompanies } from '@/modules/companies/services/company.service';
 import AssetNavigation from '@/modules/global/components/AssetNavigation';
 import { getLocations } from '@/modules/locations/services/location.service';
 import { getRoot } from '@/modules/utils/tree';
@@ -9,21 +10,23 @@ export default async function CompanyPage({
   params: Promise<{ companyId: string }>;
 }) {
   const { companyId } = await params;
+  const companies = await getCompanies();
   const locations = await getLocations(companyId);
   const assets = await getAssets(companyId);
 
   const { root, childrenLocation, childrenAsset } = getRoot(locations, assets);
+  const currentCompany = companies.filter(
+    (company) => company.id === companyId
+  )[0];
 
   return (
-    <div className="grid grid-cols-12 grid-rows-1 gap-4 overflow-hidden h-full">
-      <div className="overflow-hidden col-span-4">
-        <AssetNavigation
-          tree={root}
-          locations={childrenLocation}
-          assets={childrenAsset}
-        />
-      </div>
-      <div className="col-span-8 col-start-5">Teste</div>
+    <div className="overflow-hidden h-full">
+      <AssetNavigation
+        tree={root}
+        locations={childrenLocation}
+        assets={childrenAsset}
+        company={currentCompany}
+      />
     </div>
   );
 }

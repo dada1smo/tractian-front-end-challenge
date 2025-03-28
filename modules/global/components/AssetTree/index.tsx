@@ -6,6 +6,8 @@ import { findChildren, TreeItem } from '@/modules/utils/tree';
 import UITreeItem from '@/ui/components/Tree/TreeItem';
 import { FunctionComponent, useCallback, useMemo, useState } from 'react';
 import { TreeCategoryType } from '../../types/CategoryType';
+import AssetTreeIcon from '../AssetTreeIcon';
+import AssetStatusIcon from '../AssetStatusIcon';
 
 interface AssetTreeProps {
   tree: TreeItem[];
@@ -24,12 +26,12 @@ const AssetItem: FunctionComponent<{
   selected: TreeItem | null;
 }> = ({ item, locations, assets, onOpenChange, selectAsset, selected }) => {
   const handleSelectAsset = useCallback(
-    (item: TreeItem) => {
-      if (item.category !== 'location') {
+    (id: string, category: string) => {
+      if (category !== 'location' && id === item.id) {
         selectAsset(item);
       }
     },
-    [selectAsset]
+    [selectAsset, item]
   );
 
   const isSelected = useMemo(
@@ -37,18 +39,19 @@ const AssetItem: FunctionComponent<{
     [item.id, selected]
   );
 
-  const determineIcon = (category: TreeCategoryType) => {
-    switch (category) {
-      case 'location':
-        return '/location.svg';
-      case 'asset':
-        return '/asset.svg';
-      case 'component':
-        return '/component.svg';
-      default:
-        return '/location.svg';
+  const status = useMemo(() => {
+    if (item.status) {
+      return (
+        <AssetStatusIcon status={item.status} sensorType={item.sensorType} />
+      );
     }
+  }, [item.status, item.sensorType]);
+
+  const determineIcon = (category: TreeCategoryType, selected: boolean) => {
+    return <AssetTreeIcon category={category} isSelected={selected} />;
   };
+
+  console.log(item.status);
 
   const Tree = useMemo(
     () => (
@@ -70,7 +73,8 @@ const AssetItem: FunctionComponent<{
         onOpenChange: () => onOpenChange(locations, assets),
         content: Tree,
         initial: item.open,
-        iconStart: determineIcon(item.category),
+        iconStart: determineIcon(item.category, isSelected),
+        iconEnd: status,
         onSelectItem: handleSelectAsset,
         isSelected: isSelected,
       }}

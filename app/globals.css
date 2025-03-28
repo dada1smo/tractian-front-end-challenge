@@ -26,10 +26,14 @@
   --color-header-background: #17192d;
   --color-background: #e3eaef;
   --color-border-card: #d8dfe6;
+  --color-neutrals-600: #77818c;
+  --color-neutrals-950: #24292f;
+  --color-feedback-danger: #ed3833;
+  --color-feedback-success: #52c41a;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-background);
+  color: var(--color-neutrals-950);
   font-family: Inter, Arial, Helvetica, sans-serif;
 }
