@@ -1,7 +1,7 @@
 import { AssetType } from '@/modules/assets/types/AssetType';
 import { LocationType } from '@/modules/locations/types/LocationType';
 import { findChildren, TreeItem } from '@/modules/utils/tree';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function useAssetPagination(
   initialData: TreeItem[],
@@ -11,6 +11,10 @@ export default function useAssetPagination(
   const [currentTree, setCurrentTree] = useState<TreeItem[]>(
     initialData.slice(0, initialCount)
   );
+
+  useEffect(() => {
+    setCurrentTree(initialData.slice(0, initialCount));
+  }, [initialData, initialCount]);
 
   const loadMore = () => {
     const newCount = Math.min(

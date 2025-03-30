@@ -61,16 +61,16 @@ export function getRoot(
   assets: AssetType[]
 ): {
   root: TreeItem[];
-  childrenLocation: LocationType[];
-  childrenAsset: AssetType[];
+  childrenLocations: LocationType[];
+  childrenAssets: AssetType[];
 } {
   const root: TreeItem[] = [];
-  const childrenLocation: LocationType[] = [];
-  const childrenAsset: AssetType[] = [];
+  const childrenLocations: LocationType[] = [];
+  const childrenAssets: AssetType[] = [];
 
   locations.forEach((location) => {
     if (location.parentId !== null) {
-      return childrenLocation.push(location);
+      return childrenLocations.push(location);
     }
     if (location.parentId === null) {
       return root.push({
@@ -86,7 +86,7 @@ export function getRoot(
 
   assets.forEach((asset) => {
     if (asset.locationId !== null || asset.parentId !== null) {
-      return childrenAsset.push(asset);
+      return childrenAssets.push(asset);
     }
     if (asset.locationId === null && asset.parentId === null) {
       return root.push({
@@ -100,7 +100,7 @@ export function getRoot(
     }
   });
 
-  return { root, childrenLocation, childrenAsset };
+  return { root, childrenLocations, childrenAssets };
 }
 
 export function determineAssetCategory(

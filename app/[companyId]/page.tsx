@@ -14,7 +14,10 @@ export default async function CompanyPage({
   const locations = await getLocations(companyId);
   const assets = await getAssets(companyId);
 
-  const { root, childrenLocation, childrenAsset } = getRoot(locations, assets);
+  const { root, childrenLocations, childrenAssets } = getRoot(
+    locations,
+    assets
+  );
   const currentCompany = companies.filter(
     (company) => company.id === companyId
   )[0];
@@ -23,8 +26,10 @@ export default async function CompanyPage({
     <div className="overflow-hidden h-full">
       <AssetNavigation
         tree={root}
-        locations={childrenLocation}
-        assets={childrenAsset}
+        rawLocations={locations}
+        rawAssets={assets}
+        childrenLocations={childrenLocations}
+        childrenAssets={childrenAssets}
         company={currentCompany}
       />
     </div>

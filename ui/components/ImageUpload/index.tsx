@@ -19,7 +19,7 @@ const UIImageUpload: FunctionComponent<UIImageUploadProps> = ({
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
     useDropzone({
       accept: {
-        'image/*': ['image/png', 'image/jpeg'],
+        'image/*': ['.png', '.jpeg'],
       },
       onDrop: (acceptedFiles) => {
         addFiles(
@@ -65,7 +65,7 @@ const UIImageUpload: FunctionComponent<UIImageUploadProps> = ({
   }, [files]);
 
   return (
-    <div className="h-full flex flex-col max-h-[220px]">
+    <div className="h-full flex flex-col max-h-[260px]">
       {files.length === 1 && (
         <div className="h-full w-full rounded overflow-hidden relative border border-border-card">
           <div className="absolute top-1 right-1">
