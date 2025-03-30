@@ -44,7 +44,7 @@ const AssetView: FunctionComponent<AssetViewProps> = ({ selected }) => {
         <h2 className="text-xl font-semibold">{selected.name}</h2>
         {status}
       </div>
-      <div className="grid grid-cols-2 grid-rows-2 gap-6 py-4 px-8">
+      <div className="grid grid-cols-2 grid-rows-2 gap-6 py-4 px-8 overflow-y-auto">
         <div className="row-span-1">
           <UIImageUpload
             files={files}

@@ -48,8 +48,8 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
             </div>
           </div>
         </div>
-        <div className="col-span-8 col-start-5">
-          <div className="border border-border-card rounded-xs overflow-y-auto h-full">
+        <div className="col-span-8 col-start-5 overflow-hidden">
+          <div className="border border-border-card rounded-xs overflow-hidden h-full">
             <AssetView selected={selected} />
           </div>
         </div>
