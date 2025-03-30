@@ -12,7 +12,7 @@ interface AssetViewProps {
 }
 
 const AssetView: FunctionComponent<AssetViewProps> = ({ selected }) => {
-  const { files, setFiles } = useImageUpload(selected?.id);
+  const { files, addFiles, clearFiles } = useImageUpload(selected?.id);
 
   const status = useMemo(() => {
     if (selected?.status) {
@@ -46,7 +46,11 @@ const AssetView: FunctionComponent<AssetViewProps> = ({ selected }) => {
       </div>
       <div className="grid grid-cols-2 grid-rows-2 gap-6 py-4 px-8">
         <div className="row-span-1">
-          <UIImageUpload files={files} setFiles={setFiles} />
+          <UIImageUpload
+            files={files}
+            addFiles={addFiles}
+            clearFiles={clearFiles}
+          />
         </div>
         <div className="flex flex-col py-8 gap-5">
           <div>
@@ -73,14 +77,14 @@ const AssetView: FunctionComponent<AssetViewProps> = ({ selected }) => {
               <UIDataItem
                 label="Sensor"
                 iconStart="/sensor.svg"
-                content={selected.sensorId}
+                content={selected.sensorId || 'Nenhum'}
               />
             </div>
             <div className="mt-6">
               <UIDataItem
                 label="Receptor"
                 iconStart="/receptor.svg"
-                content={selected.gatewayId}
+                content={selected.gatewayId || 'Nenhum'}
               />
             </div>
           </div>
