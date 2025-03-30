@@ -4,12 +4,16 @@ import AssetStatusIcon from '../AssetStatusIcon';
 import UIDataItem from '@/ui/components/DataItem';
 import UIAvatar from '@/ui/components/Avatar';
 import UIDivider from '@/ui/components/Divider';
+import UIImageUpload from '@/ui/components/ImageUpload';
+import useImageUpload from '@/ui/hooks/use-image-upload';
 
 interface AssetViewProps {
   selected: TreeItem | null;
 }
 
 const AssetView: FunctionComponent<AssetViewProps> = ({ selected }) => {
+  const { files, setFiles } = useImageUpload(selected?.id);
+
   const status = useMemo(() => {
     if (selected?.status) {
       return (
@@ -40,8 +44,10 @@ const AssetView: FunctionComponent<AssetViewProps> = ({ selected }) => {
         <h2 className="text-xl font-semibold">{selected.name}</h2>
         {status}
       </div>
-      <div className="grid grid-cols-2 grid-rows-2 gap-2 py-4 px-8">
-        <div className="row-span-1">Image</div>
+      <div className="grid grid-cols-2 grid-rows-2 gap-6 py-4 px-8">
+        <div className="row-span-1">
+          <UIImageUpload files={files} setFiles={setFiles} />
+        </div>
         <div className="flex flex-col py-8 gap-5">
           <div>
             <UIDataItem label="Tipo de Equipamento" content={equipment} />

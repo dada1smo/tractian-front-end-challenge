@@ -1,15 +1,21 @@
 import NextImage, { ImageProps as NextImageProps } from 'next/image';
 import { FunctionComponent } from 'react';
 
-type ImageProps = NextImageProps;
+interface UIImageProps extends NextImageProps {
+  cover?: boolean;
+}
 
-const UIImage: FunctionComponent<ImageProps> = (props) => {
+const UIImage: FunctionComponent<UIImageProps> = ({ cover, ...props }) => {
   return (
     <NextImage
       {...props}
       width={0}
       height={0}
-      style={{ width: props.width, height: 'auto' }}
+      style={{
+        width: cover ? '100%' : props.width,
+        height: cover ? '100%' : 'auto',
+        objectFit: cover ? 'cover' : undefined,
+      }}
     />
   );
 };

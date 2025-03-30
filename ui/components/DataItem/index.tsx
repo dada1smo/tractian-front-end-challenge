@@ -15,14 +15,14 @@ const UIDataItem: FunctionComponent<UIDataItemProps> = ({
   return (
     <div className="flex flex-col gap-2">
       <p className="font-semibold">{label}</p>
-      <div className="mb-4 text-neutrals-600 flex items-center gap-1">
+      <div className="mb-4 text-neutrals-600 flex items-center gap-2">
         {iconStart && (
           <Image
             src={iconStart}
             alt=""
             width={20}
             height={20}
-            className="mr-1"
+            className="h-auto"
           />
         )}
         {content}
