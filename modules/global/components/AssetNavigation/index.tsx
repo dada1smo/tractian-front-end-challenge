@@ -31,7 +31,7 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
   const {
     filteredTree,
     handleFilterBySensorType,
-    isFiltered,
+    filterType,
     handleFilterByStatus,
   } = useAssetFilter(tree, rawLocations, rawAssets);
   const { selectAsset, selected } = useAssetSelection();
@@ -46,11 +46,39 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
           </p>
         </div>
         <div className="flex gap-2">
-          <UIButton onClick={() => handleFilterByStatus('alert')}>
-            Crítico
-          </UIButton>
-          <UIButton onClick={() => handleFilterBySensorType('energy')}>
+          <UIButton
+            variant={filterType === 'sensor' ? 'default' : 'outline'}
+            onClick={() => handleFilterBySensorType('energy')}
+            className={
+              filterType === 'sensor' ? 'pointer-events-none cursor-auto' : ''
+            }
+            icon={{
+              position: 'before',
+              size: 20,
+              src:
+                filterType === 'sensor'
+                  ? '/energy-sensor-filter-white.svg'
+                  : '/energy-sensor-filter.svg',
+            }}
+          >
             Sensor de Energia
+          </UIButton>
+          <UIButton
+            variant={filterType === 'status' ? 'default' : 'outline'}
+            onClick={() => handleFilterByStatus('alert')}
+            className={
+              filterType === 'status' ? 'pointer-events-none cursor-auto' : ''
+            }
+            icon={{
+              position: 'before',
+              size: 20,
+              src:
+                filterType === 'status'
+                  ? '/alert-status-filter-white.svg'
+                  : '/alert-status-filter.svg',
+            }}
+          >
+            Crítico
           </UIButton>
         </div>
       </div>
@@ -64,7 +92,7 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
                 assets={childrenAssets}
                 selectAsset={selectAsset}
                 selected={selected}
-                isFiltered={isFiltered}
+                isFiltered={filterType !== 'none'}
               />
             </div>
           </div>
