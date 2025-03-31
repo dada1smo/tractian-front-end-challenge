@@ -24,19 +24,10 @@ const AssetItem: FunctionComponent<{
   item: TreeItem;
   locations: LocationType[];
   assets: AssetType[];
-  onOpenChange: (locationData: LocationType[], assetData: AssetType[]) => void;
   selectAsset: (asset: TreeItem) => void;
   selected: TreeItem | null;
   isFiltered?: boolean;
-}> = ({
-  item,
-  locations,
-  assets,
-  onOpenChange,
-  selectAsset,
-  selected,
-  isFiltered,
-}) => {
+}> = ({ item, locations, assets, selectAsset, selected, isFiltered }) => {
   const handleSelectAsset = useCallback(
     (id: string, category: string) => {
       if (category !== 'location' && id === item.id) {
@@ -81,9 +72,6 @@ const AssetItem: FunctionComponent<{
     <UITreeItem
       item={{
         ...item,
-        onOpenChange: isFiltered
-          ? undefined
-          : () => onOpenChange(locations, assets),
         content: Tree,
         initial: isFiltered ? true : item.open,
         iconStart: determineIcon(item.category, isSelected),
@@ -103,8 +91,12 @@ const AssetTree: FunctionComponent<AssetTreeProps> = ({
   selected,
   isFiltered,
 }) => {
-  const { currentTree, loadMore, hasMore, loadChildren } =
-    useAssetPagination(tree);
+  const { currentTree, loadMore, hasMore } = useAssetPagination(
+    tree,
+    24,
+    24,
+    isFiltered
+  );
 
   return (
     <div className="flex flex-col gap-1">
@@ -114,7 +106,6 @@ const AssetTree: FunctionComponent<AssetTreeProps> = ({
           item={item}
           locations={locations}
           assets={assets}
-          onOpenChange={loadChildren}
           selectAsset={selectAsset}
           selected={selected}
           isFiltered={isFiltered}

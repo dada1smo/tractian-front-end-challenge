@@ -87,20 +87,32 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
       </div>
       <div className="grid grid-cols-12 gap-4 overflow-hidden h-full grow">
         <div className="overflow-hidden col-span-4">
-          <div className="border border-border-card rounded-xs overflow-hidden h-full">
+          <div className="border border-border-card rounded-xs overflow-hidden h-full flex flex-col">
             <AssetNameFilter
               handleFilterByName={handleFilterByName}
               clearFilters={clearFilters}
             />
             <div className="overflow-y-auto h-full py-2 px-3 border-t border-border-card">
-              <AssetTree
-                tree={filteredTree}
-                locations={childrenLocations}
-                assets={childrenAssets}
-                selectAsset={selectAsset}
-                selected={selected}
-                isFiltered={filterType !== 'none'}
-              />
+              {filterType !== 'none' && (
+                <AssetTree
+                  tree={filteredTree}
+                  locations={childrenLocations}
+                  assets={childrenAssets}
+                  selectAsset={selectAsset}
+                  selected={selected}
+                  isFiltered={true}
+                />
+              )}
+              {filterType === 'none' && (
+                <AssetTree
+                  tree={tree}
+                  locations={childrenLocations}
+                  assets={childrenAssets}
+                  selectAsset={selectAsset}
+                  selected={selected}
+                  isFiltered={false}
+                />
+              )}
             </div>
           </div>
         </div>

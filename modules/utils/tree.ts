@@ -10,6 +10,31 @@ export interface TreeItem extends AssetType {
   selected?: boolean;
 }
 
+export async function buildTreeAsync(items: TreeItem[]): Promise<TreeItem[]> {
+  await new Promise((resolve) => setTimeout(resolve, 0));
+
+  const itemMap = new Map();
+  const rootNodes = [];
+
+  for (const item of items) {
+    item.children = [];
+    itemMap.set(item.id, item);
+  }
+
+  for (const item of items) {
+    if (item.parentId === null) {
+      rootNodes.push(item);
+    } else {
+      const parent = itemMap.get(item.parentId);
+      if (parent) {
+        parent.children.push(item);
+      }
+    }
+  }
+
+  return rootNodes;
+}
+
 export function findChildrenAsset(
   data: AssetType[],
   parentId: string,
@@ -195,6 +220,21 @@ export function determineAssetCategory(
   }
 
   return 'component';
+}
+
+export function determineParent(
+  parentId?: string | null,
+  locationId?: string | null
+): string | null {
+  if (parentId) {
+    return parentId;
+  }
+
+  if (locationId) {
+    return locationId;
+  }
+
+  return null;
 }
 
 // export function buildTree(data: LocationType[]): TreeItem[] {

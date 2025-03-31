@@ -2,7 +2,11 @@ import { getAssets } from '@/modules/assets/services/asset.service';
 import { getCompanies } from '@/modules/companies/services/company.service';
 import AssetNavigation from '@/modules/global/components/AssetNavigation';
 import { getLocations } from '@/modules/locations/services/location.service';
-import { getRoot } from '@/modules/utils/tree';
+import {
+  formatAssetsIntoTree,
+  formatLocationsIntoTree,
+} from '@/modules/utils/format';
+import { buildTreeAsync, getRoot } from '@/modules/utils/tree';
 
 export default async function CompanyPage({
   params,
@@ -22,10 +26,15 @@ export default async function CompanyPage({
     (company) => company.id === companyId
   )[0];
 
+  const tree = await buildTreeAsync([
+    ...formatLocationsIntoTree(locations),
+    ...formatAssetsIntoTree(assets),
+  ]);
+
   return (
     <div className="overflow-hidden h-full">
       <AssetNavigation
-        tree={root}
+        tree={tree}
         rawLocations={locations}
         rawAssets={assets}
         childrenLocations={childrenLocations}
