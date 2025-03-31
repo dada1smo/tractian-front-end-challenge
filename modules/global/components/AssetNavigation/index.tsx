@@ -1,7 +1,5 @@
 'use client';
 
-import { AssetType } from '@/modules/assets/types/AssetType';
-import { LocationType } from '@/modules/locations/types/LocationType';
 import { TreeItem } from '@/modules/utils/tree';
 import { FunctionComponent } from 'react';
 import AssetTree from '../AssetTree';
@@ -14,19 +12,11 @@ import AssetNameFilter from '../AssetNameFilter';
 
 interface AssetNavigationProps {
   tree: TreeItem[];
-  rawLocations: LocationType[];
-  rawAssets: AssetType[];
-  childrenLocations: LocationType[];
-  childrenAssets: AssetType[];
   company: CompanyType;
 }
 
 const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
   tree,
-  rawLocations,
-  rawAssets,
-  childrenAssets,
-  childrenLocations,
   company,
 }) => {
   const {
@@ -36,7 +26,7 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
     handleFilterByStatus,
     handleFilterByName,
     clearFilters,
-  } = useAssetFilter(tree, rawLocations, rawAssets);
+  } = useAssetFilter(tree);
   const { selectAsset, selected } = useAssetSelection();
 
   return (
@@ -87,20 +77,28 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
       </div>
       <div className="grid grid-cols-12 gap-4 overflow-hidden h-full grow">
         <div className="overflow-hidden col-span-4">
-          <div className="border border-border-card rounded-xs overflow-hidden h-full">
+          <div className="border border-border-card rounded-xs overflow-hidden h-full flex flex-col">
             <AssetNameFilter
               handleFilterByName={handleFilterByName}
               clearFilters={clearFilters}
             />
             <div className="overflow-y-auto h-full py-2 px-3 border-t border-border-card">
-              <AssetTree
-                tree={filteredTree}
-                locations={childrenLocations}
-                assets={childrenAssets}
-                selectAsset={selectAsset}
-                selected={selected}
-                isFiltered={filterType !== 'none'}
-              />
+              {filterType !== 'none' && (
+                <AssetTree
+                  tree={filteredTree}
+                  selectAsset={selectAsset}
+                  selected={selected}
+                  isFiltered={true}
+                />
+              )}
+              {filterType === 'none' && (
+                <AssetTree
+                  tree={tree}
+                  selectAsset={selectAsset}
+                  selected={selected}
+                  isFiltered={false}
+                />
+              )}
             </div>
           </div>
         </div>

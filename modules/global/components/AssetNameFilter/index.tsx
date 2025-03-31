@@ -1,14 +1,13 @@
 import { UIButton } from '@/ui/components/Button';
 import UIForm from '@/ui/components/Form';
 import UIFormInput from '@/ui/components/Input/Form';
-import UIFormRadio from '@/ui/components/Radio/Form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FunctionComponent } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 interface AssetNameFilterProps {
-  handleFilterByName: (category: 'location' | 'asset', search: string) => void;
+  handleFilterByName: (search: string) => void;
   clearFilters: () => void;
 }
 
@@ -16,14 +15,12 @@ const schema = z.object({
   name: z
     .string()
     .min(2, 'Preencha pelo menos dois caracteres para pesquisar.'),
-  category: z.union([z.literal('location'), z.literal('asset')]),
 });
 
 type FormFields = z.infer<typeof schema>;
 
 const defaultValues: FormFields = {
   name: '',
-  category: 'location',
 };
 
 const AssetNameFilter: FunctionComponent<AssetNameFilterProps> = ({
@@ -36,7 +33,7 @@ const AssetNameFilter: FunctionComponent<AssetNameFilterProps> = ({
   });
 
   const submit = (data: FormFields) => {
-    handleFilterByName(data.category, data.name);
+    handleFilterByName(data.name);
   };
 
   return (
@@ -46,7 +43,7 @@ const AssetNameFilter: FunctionComponent<AssetNameFilterProps> = ({
           control={control}
           name="name"
           type="text"
-          placeholder="Pesquise por nome"
+          placeholder="Buscar Ativo ou Local"
         />
         <UIButton
           variant="ghost"
@@ -56,21 +53,7 @@ const AssetNameFilter: FunctionComponent<AssetNameFilterProps> = ({
           type="submit"
         />
       </div>
-      <div className="flex justify-between pr-2">
-        <UIFormRadio
-          control={control}
-          name="category"
-          options={[
-            {
-              label: 'Local',
-              value: 'location',
-            },
-            {
-              label: 'Ativo',
-              value: 'asset',
-            },
-          ]}
-        />
+      <div className="flex justify-end px-2 pb-2">
         <UIButton
           size="sm"
           variant="ghost"

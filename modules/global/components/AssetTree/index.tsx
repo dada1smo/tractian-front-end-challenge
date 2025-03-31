@@ -1,7 +1,5 @@
 'use client';
 
-import { AssetType } from '@/modules/assets/types/AssetType';
-import { LocationType } from '@/modules/locations/types/LocationType';
 import { TreeItem } from '@/modules/utils/tree';
 import UITreeItem from '@/ui/components/Tree/TreeItem';
 import { FunctionComponent, useCallback, useMemo } from 'react';
@@ -13,8 +11,6 @@ import useAssetPagination from '../../hooks/use-asset-pagination';
 
 interface AssetTreeProps {
   tree: TreeItem[];
-  locations: LocationType[];
-  assets: AssetType[];
   selectAsset: (asset: TreeItem) => void;
   selected: TreeItem | null;
   isFiltered?: boolean;
@@ -22,21 +18,10 @@ interface AssetTreeProps {
 
 const AssetItem: FunctionComponent<{
   item: TreeItem;
-  locations: LocationType[];
-  assets: AssetType[];
-  onOpenChange: (locationData: LocationType[], assetData: AssetType[]) => void;
   selectAsset: (asset: TreeItem) => void;
   selected: TreeItem | null;
   isFiltered?: boolean;
-}> = ({
-  item,
-  locations,
-  assets,
-  onOpenChange,
-  selectAsset,
-  selected,
-  isFiltered,
-}) => {
+}> = ({ item, selectAsset, selected, isFiltered }) => {
   const handleSelectAsset = useCallback(
     (id: string, category: string) => {
       if (category !== 'location' && id === item.id) {
@@ -67,23 +52,18 @@ const AssetItem: FunctionComponent<{
     () => (
       <AssetTree
         tree={item.children}
-        locations={locations}
-        assets={assets}
         selectAsset={selectAsset}
         selected={selected}
         isFiltered={isFiltered}
       />
     ),
-    [item.children, locations, assets, selectAsset, selected, isFiltered]
+    [item.children, selectAsset, selected, isFiltered]
   );
 
   return (
     <UITreeItem
       item={{
         ...item,
-        onOpenChange: isFiltered
-          ? undefined
-          : () => onOpenChange(locations, assets),
         content: Tree,
         initial: isFiltered ? true : item.open,
         iconStart: determineIcon(item.category, isSelected),
@@ -97,14 +77,16 @@ const AssetItem: FunctionComponent<{
 
 const AssetTree: FunctionComponent<AssetTreeProps> = ({
   tree,
-  locations,
-  assets,
   selectAsset,
   selected,
   isFiltered,
 }) => {
-  const { currentTree, loadMore, hasMore, loadChildren } =
-    useAssetPagination(tree);
+  const { currentTree, loadMore, hasMore } = useAssetPagination(
+    tree,
+    24,
+    24,
+    isFiltered
+  );
 
   return (
     <div className="flex flex-col gap-1">
@@ -112,9 +94,6 @@ const AssetTree: FunctionComponent<AssetTreeProps> = ({
         <AssetItem
           key={item.id}
           item={item}
-          locations={locations}
-          assets={assets}
-          onOpenChange={loadChildren}
           selectAsset={selectAsset}
           selected={selected}
           isFiltered={isFiltered}

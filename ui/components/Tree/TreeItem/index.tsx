@@ -30,9 +30,7 @@ const UITreeItem: FunctionComponent<{ item: UITreeItemProps }> = ({ item }) => {
   const hasChildren = Array.isArray(item.children) && item.children.length > 0;
 
   useEffect(() => {
-    if (item.initial) {
-      setOpen(true);
-    }
+    setOpen(!!item.initial);
   }, [item.initial]);
 
   return (

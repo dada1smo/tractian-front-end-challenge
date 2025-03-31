@@ -2,7 +2,7 @@
 
 import { AssetType } from '@/modules/assets/types/AssetType';
 import { LocationType } from '@/modules/locations/types/LocationType';
-import { findChildren, TreeItem } from '@/modules/utils/tree';
+import { TreeItem } from '@/modules/utils/tree';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 
@@ -39,13 +39,7 @@ export default function useAssetNavigation() {
               item.children.map((child) => {
                 return {
                   ...child,
-                  children: findChildren(
-                    locations,
-                    assets,
-                    child.id,
-                    child.id,
-                    child.lineage
-                  ),
+                  children: [],
                 };
               }),
               locations,
