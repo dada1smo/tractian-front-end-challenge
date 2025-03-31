@@ -10,6 +10,7 @@ import { CompanyType } from '@/modules/companies/types/CompanyType';
 import AssetView from '../AssetView';
 import useAssetFilter from '../../hooks/use-asset-filter';
 import { UIButton } from '@/ui/components/Button';
+import AssetNameFilter from '../AssetNameFilter';
 
 interface AssetNavigationProps {
   tree: TreeItem[];
@@ -85,7 +86,8 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
       <div className="grid grid-cols-12 gap-4 overflow-hidden h-full grow">
         <div className="overflow-hidden col-span-4">
           <div className="border border-border-card rounded-xs overflow-hidden h-full">
-            <div className="overflow-y-auto h-full py-2 px-3">
+            <AssetNameFilter />
+            <div className="overflow-y-auto h-full py-2 px-3 border-t border-border-card">
               <AssetTree
                 tree={filteredTree}
                 locations={childrenLocations}

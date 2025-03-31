@@ -52,7 +52,6 @@ function filterBySensorType(
     )
     .map((asset) => findParents(asset, locations, assets));
 
-  console.log(mergeObjectsById(filterAssets));
   return mergeObjectsById(filterAssets);
 }
 
@@ -68,6 +67,5 @@ function filterByStatus(
     )
     .map((asset) => findParents(asset, locations, assets));
 
-  console.log(mergeObjectsById(filterAssets));
   return mergeObjectsById(filterAssets);
 }

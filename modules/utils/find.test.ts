@@ -84,7 +84,3 @@ test('find parent tree', () => {
     findParents(childOfLocation, [parentLocation, grandparentLocation], [])
   ).toStrictEqual(grandparentLocationAsTreeItem);
 });
-
-// console.log(
-//   findParents(childOfLocation, [parentLocation, grandparentLocation], [])
-// );
