@@ -43,7 +43,7 @@ const AssetNameFilter: FunctionComponent<AssetNameFilterProps> = ({
           control={control}
           name="name"
           type="text"
-          placeholder="Pesquise por nome"
+          placeholder="Buscar Ativo ou Local"
         />
         <UIButton
           variant="ghost"
@@ -53,7 +53,7 @@ const AssetNameFilter: FunctionComponent<AssetNameFilterProps> = ({
           type="submit"
         />
       </div>
-      <div className="flex justify-end pr-2">
+      <div className="flex justify-end px-2 pb-2">
         <UIButton
           size="sm"
           variant="ghost"
