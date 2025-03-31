@@ -2,7 +2,8 @@ import { AssetType } from '@/modules/assets/types/AssetType';
 import { LocationType } from '@/modules/locations/types/LocationType';
 import { determineAssetCategory, TreeItem } from '@/modules/utils/tree';
 import { useState } from 'react';
-import { findAssetParent } from './filter';
+import { findParents } from '@/modules/utils/find';
+import { formatIntoTreeItem } from '@/modules/utils/format';
 
 export default function useAssetFilter(
   tree: TreeItem[],
@@ -23,38 +24,12 @@ function filterBySensorType(
   assets: AssetType[],
   locations: LocationType[]
 ) {
-  const filterAssets = assets.filter(
-    (asset) => asset.sensorType === sensorType
-  );
-  const tree: TreeItem[] = [];
+  const filterAssets = assets
+    .filter((asset) => asset.sensorType === sensorType)
+    .map((asset) =>
+      formatIntoTreeItem(determineAssetCategory(asset.sensorType), asset)
+    )
+    .map((asset) => findParents(asset, locations, assets));
 
-  filterAssets.forEach((asset) => {
-    if (!asset.parentId && !asset.locationId) {
-      tree.push({
-        ...asset,
-        category: 'component',
-        children: [],
-        lineage: [asset.id],
-      });
-    }
-
-    if (asset.locationId) {
-      const parents = findAssetParent(
-        'location',
-        {
-          ...asset,
-          category: determineAssetCategory(asset.sensorType),
-          lineage: [asset.id],
-          children: [],
-        },
-        locations
-      );
-
-      if (parents) {
-        tree.push(parents);
-      }
-    }
-  });
-
-  return tree;
+  return filterAssets;
 }

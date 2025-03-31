@@ -33,6 +33,10 @@ export function findParents(
     if (parentItem?.parentId) {
       return findParents(parentItem, locations, assets);
     }
+
+    if (parentItem) {
+      return parentItem;
+    }
   }
 
   if (item.locationId) {
@@ -46,6 +50,10 @@ export function findParents(
     if (parentItem?.parentId) {
       return findParents(parentItem, locations, assets);
     }
+
+    if (parentItem) {
+      return parentItem;
+    }
   }
 
   if (item.parentId) {
@@ -53,6 +61,10 @@ export function findParents(
 
     if (parentItem?.parentId) {
       return findParents(parentItem, locations, assets);
+    }
+
+    if (parentItem) {
+      return parentItem;
     }
   }
 
