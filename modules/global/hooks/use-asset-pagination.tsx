@@ -1,6 +1,4 @@
-import { AssetType } from '@/modules/assets/types/AssetType';
-import { LocationType } from '@/modules/locations/types/LocationType';
-import { findChildren, TreeItem } from '@/modules/utils/tree';
+import { TreeItem } from '@/modules/utils/tree';
 import { useEffect, useState } from 'react';
 
 export default function useAssetPagination(
@@ -29,28 +27,7 @@ export default function useAssetPagination(
     });
   };
 
-  const loadChildren = (
-    locationData: LocationType[],
-    assetData: AssetType[]
-  ) => {
-    setCurrentTree((prev) => {
-      return prev.map((item) => ({
-        ...item,
-        children: item.children.map((child) => ({
-          ...child,
-          children: findChildren(
-            locationData,
-            assetData,
-            child.id,
-            child.id,
-            child.lineage
-          ),
-        })),
-      }));
-    });
-  };
-
   const hasMore = currentTree.length < initialData.length;
 
-  return { currentTree, loadMore, hasMore, loadChildren };
+  return { currentTree, loadMore, hasMore };
 }

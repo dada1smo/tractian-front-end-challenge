@@ -1,7 +1,7 @@
 import { AssetType } from '../assets/types/AssetType';
 import { TreeCategoryType } from '../global/types/CategoryType';
 import { LocationType } from '../locations/types/LocationType';
-import { determineAssetCategory, determineParent, TreeItem } from './tree';
+import { TreeItem } from './tree';
 
 export function formatIntoTreeItem(
   category: TreeCategoryType,
@@ -21,4 +21,29 @@ export function formatAssetsIntoTree(assets: AssetType[]) {
       parentId: determineParent(asset.parentId, asset.locationId),
     })
   );
+}
+
+export function determineAssetCategory(
+  sensorType?: string | null
+): TreeCategoryType {
+  if (!sensorType) {
+    return 'asset';
+  }
+
+  return 'component';
+}
+
+export function determineParent(
+  parentId?: string | null,
+  locationId?: string | null
+): string | null {
+  if (parentId) {
+    return parentId;
+  }
+
+  if (locationId) {
+    return locationId;
+  }
+
+  return null;
 }

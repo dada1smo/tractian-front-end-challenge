@@ -1,7 +1,5 @@
 'use client';
 
-import { AssetType } from '@/modules/assets/types/AssetType';
-import { LocationType } from '@/modules/locations/types/LocationType';
 import { TreeItem } from '@/modules/utils/tree';
 import { FunctionComponent } from 'react';
 import AssetTree from '../AssetTree';
@@ -14,19 +12,11 @@ import AssetNameFilter from '../AssetNameFilter';
 
 interface AssetNavigationProps {
   tree: TreeItem[];
-  rawLocations: LocationType[];
-  rawAssets: AssetType[];
-  childrenLocations: LocationType[];
-  childrenAssets: AssetType[];
   company: CompanyType;
 }
 
 const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
   tree,
-  rawLocations,
-  rawAssets,
-  childrenAssets,
-  childrenLocations,
   company,
 }) => {
   const {
@@ -36,7 +26,7 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
     handleFilterByStatus,
     handleFilterByName,
     clearFilters,
-  } = useAssetFilter(tree, rawLocations, rawAssets);
+  } = useAssetFilter(tree);
   const { selectAsset, selected } = useAssetSelection();
 
   return (
@@ -96,8 +86,6 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
               {filterType !== 'none' && (
                 <AssetTree
                   tree={filteredTree}
-                  locations={childrenLocations}
-                  assets={childrenAssets}
                   selectAsset={selectAsset}
                   selected={selected}
                   isFiltered={true}
@@ -106,8 +94,6 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
               {filterType === 'none' && (
                 <AssetTree
                   tree={tree}
-                  locations={childrenLocations}
-                  assets={childrenAssets}
                   selectAsset={selectAsset}
                   selected={selected}
                   isFiltered={false}

@@ -1,7 +1,5 @@
 'use client';
 
-import { AssetType } from '@/modules/assets/types/AssetType';
-import { LocationType } from '@/modules/locations/types/LocationType';
 import { TreeItem } from '@/modules/utils/tree';
 import UITreeItem from '@/ui/components/Tree/TreeItem';
 import { FunctionComponent, useCallback, useMemo } from 'react';
@@ -13,8 +11,6 @@ import useAssetPagination from '../../hooks/use-asset-pagination';
 
 interface AssetTreeProps {
   tree: TreeItem[];
-  locations: LocationType[];
-  assets: AssetType[];
   selectAsset: (asset: TreeItem) => void;
   selected: TreeItem | null;
   isFiltered?: boolean;
@@ -22,12 +18,10 @@ interface AssetTreeProps {
 
 const AssetItem: FunctionComponent<{
   item: TreeItem;
-  locations: LocationType[];
-  assets: AssetType[];
   selectAsset: (asset: TreeItem) => void;
   selected: TreeItem | null;
   isFiltered?: boolean;
-}> = ({ item, locations, assets, selectAsset, selected, isFiltered }) => {
+}> = ({ item, selectAsset, selected, isFiltered }) => {
   const handleSelectAsset = useCallback(
     (id: string, category: string) => {
       if (category !== 'location' && id === item.id) {
@@ -58,14 +52,12 @@ const AssetItem: FunctionComponent<{
     () => (
       <AssetTree
         tree={item.children}
-        locations={locations}
-        assets={assets}
         selectAsset={selectAsset}
         selected={selected}
         isFiltered={isFiltered}
       />
     ),
-    [item.children, locations, assets, selectAsset, selected, isFiltered]
+    [item.children, selectAsset, selected, isFiltered]
   );
 
   return (
@@ -85,8 +77,6 @@ const AssetItem: FunctionComponent<{
 
 const AssetTree: FunctionComponent<AssetTreeProps> = ({
   tree,
-  locations,
-  assets,
   selectAsset,
   selected,
   isFiltered,
@@ -104,8 +94,6 @@ const AssetTree: FunctionComponent<AssetTreeProps> = ({
         <AssetItem
           key={item.id}
           item={item}
-          locations={locations}
-          assets={assets}
           selectAsset={selectAsset}
           selected={selected}
           isFiltered={isFiltered}

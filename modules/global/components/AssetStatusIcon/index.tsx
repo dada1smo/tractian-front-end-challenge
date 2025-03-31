@@ -1,6 +1,5 @@
 import { AssetStatusType } from '@/modules/assets/types/AssetType';
 import { FunctionComponent } from 'react';
-import { TreeCategoryType } from '../../types/CategoryType';
 
 interface AssetStatusIconProps {
   status: AssetStatusType;
