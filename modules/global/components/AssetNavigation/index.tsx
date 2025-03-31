@@ -28,11 +28,12 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
   childrenLocations,
   company,
 }) => {
-  const { filteredTree, handleFilterBySensorType } = useAssetFilter(
-    tree,
-    rawLocations,
-    rawAssets
-  );
+  const {
+    filteredTree,
+    handleFilterBySensorType,
+    isFiltered,
+    handleFilterByStatus,
+  } = useAssetFilter(tree, rawLocations, rawAssets);
   const { selectAsset, selected } = useAssetSelection();
 
   return (
@@ -44,9 +45,14 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
             / {`${company.name} Unit`}
           </p>
         </div>
-        <UIButton onClick={() => handleFilterBySensorType('energy')}>
-          Sensor de Energia
-        </UIButton>
+        <div className="flex gap-2">
+          <UIButton onClick={() => handleFilterByStatus('alert')}>
+            Crítico
+          </UIButton>
+          <UIButton onClick={() => handleFilterBySensorType('energy')}>
+            Sensor de Energia
+          </UIButton>
+        </div>
       </div>
       <div className="grid grid-cols-12 gap-4 overflow-hidden h-full grow">
         <div className="overflow-hidden col-span-4">
@@ -58,6 +64,7 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
                 assets={childrenAssets}
                 selectAsset={selectAsset}
                 selected={selected}
+                isFiltered={isFiltered}
               />
             </div>
           </div>

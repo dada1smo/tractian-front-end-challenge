@@ -17,6 +17,7 @@ interface AssetTreeProps {
   assets: AssetType[];
   selectAsset: (asset: TreeItem) => void;
   selected: TreeItem | null;
+  isFiltered?: boolean;
 }
 
 const AssetItem: FunctionComponent<{
@@ -26,7 +27,16 @@ const AssetItem: FunctionComponent<{
   onOpenChange: (locationData: LocationType[], assetData: AssetType[]) => void;
   selectAsset: (asset: TreeItem) => void;
   selected: TreeItem | null;
-}> = ({ item, locations, assets, onOpenChange, selectAsset, selected }) => {
+  isFiltered?: boolean;
+}> = ({
+  item,
+  locations,
+  assets,
+  onOpenChange,
+  selectAsset,
+  selected,
+  isFiltered,
+}) => {
   const handleSelectAsset = useCallback(
     (id: string, category: string) => {
       if (category !== 'location' && id === item.id) {
@@ -61,18 +71,21 @@ const AssetItem: FunctionComponent<{
         assets={assets}
         selectAsset={selectAsset}
         selected={selected}
+        isFiltered={isFiltered}
       />
     ),
-    [item.children, locations, assets, selectAsset, selected]
+    [item.children, locations, assets, selectAsset, selected, isFiltered]
   );
 
   return (
     <UITreeItem
       item={{
         ...item,
-        onOpenChange: () => onOpenChange(locations, assets),
+        onOpenChange: isFiltered
+          ? undefined
+          : () => onOpenChange(locations, assets),
         content: Tree,
-        initial: item.open,
+        initial: isFiltered ? true : item.open,
         iconStart: determineIcon(item.category, isSelected),
         iconEnd: status,
         onSelectItem: handleSelectAsset,
@@ -88,6 +101,7 @@ const AssetTree: FunctionComponent<AssetTreeProps> = ({
   assets,
   selectAsset,
   selected,
+  isFiltered,
 }) => {
   const { currentTree, loadMore, hasMore, loadChildren } =
     useAssetPagination(tree);
@@ -103,6 +117,7 @@ const AssetTree: FunctionComponent<AssetTreeProps> = ({
           onOpenChange={loadChildren}
           selectAsset={selectAsset}
           selected={selected}
+          isFiltered={isFiltered}
         />
       ))}
       {hasMore && (

@@ -1,9 +1,10 @@
 import { AssetType } from '@/modules/assets/types/AssetType';
 import { LocationType } from '@/modules/locations/types/LocationType';
 import { determineAssetCategory, TreeItem } from '@/modules/utils/tree';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { findParents } from '@/modules/utils/find';
 import { formatIntoTreeItem } from '@/modules/utils/format';
+import { mergeObjectsById } from '@/modules/utils/merge';
 
 export default function useAssetFilter(
   tree: TreeItem[],
@@ -12,11 +13,25 @@ export default function useAssetFilter(
 ) {
   const [filteredTree, setFilteredTree] = useState<TreeItem[]>(tree);
 
+  const isFiltered = useMemo(
+    () => tree.length !== filteredTree.length,
+    [tree.length, filteredTree.length]
+  );
+
   function handleFilterBySensorType(sensorType: 'energy' | 'vibration') {
     setFilteredTree(filterBySensorType(sensorType, assets, locations));
   }
 
-  return { filteredTree, handleFilterBySensorType };
+  function handleFilterByStatus(status: 'alert' | 'operating') {
+    setFilteredTree(filterByStatus(status, assets, locations));
+  }
+
+  return {
+    filteredTree,
+    handleFilterBySensorType,
+    handleFilterByStatus,
+    isFiltered,
+  };
 }
 
 function filterBySensorType(
@@ -31,5 +46,22 @@ function filterBySensorType(
     )
     .map((asset) => findParents(asset, locations, assets));
 
-  return filterAssets;
+  console.log(mergeObjectsById(filterAssets));
+  return mergeObjectsById(filterAssets);
+}
+
+function filterByStatus(
+  status: 'alert' | 'operating',
+  assets: AssetType[],
+  locations: LocationType[]
+) {
+  const filterAssets = assets
+    .filter((asset) => asset.status === status)
+    .map((asset) =>
+      formatIntoTreeItem(determineAssetCategory(asset.sensorType), asset)
+    )
+    .map((asset) => findParents(asset, locations, assets));
+
+  console.log(mergeObjectsById(filterAssets));
+  return mergeObjectsById(filterAssets);
 }

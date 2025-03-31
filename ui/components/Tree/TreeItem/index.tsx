@@ -1,6 +1,6 @@
 'use client';
 
-import { FunctionComponent, ReactNode, useState } from 'react';
+import { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 import {
   Collapsible,
   CollapsibleContent,
@@ -28,6 +28,12 @@ const UITreeItem: FunctionComponent<{ item: UITreeItemProps }> = ({ item }) => {
   const [open, setOpen] = useState<boolean>(!!item.initial);
 
   const hasChildren = Array.isArray(item.children) && item.children.length > 0;
+
+  useEffect(() => {
+    if (item.initial) {
+      setOpen(true);
+    }
+  }, [item.initial]);
 
   return (
     <Collapsible
