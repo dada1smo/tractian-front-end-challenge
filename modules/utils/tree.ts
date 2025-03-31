@@ -56,6 +56,90 @@ export function findChildren(
   ];
 }
 
+export function buildChildrenMap(
+  locations: LocationType[],
+  assets: AssetType[]
+) {
+  const locationMap = new Map();
+  const assetMap = new Map();
+
+  locations.forEach((loc) => {
+    if (!locationMap.has(loc.parentId)) {
+      locationMap.set(loc.parentId, []);
+    }
+    locationMap.get(loc.parentId).push({
+      ...loc,
+      children: [],
+      category: 'location',
+    });
+  });
+
+  assets.forEach((asset) => {
+    if (!assetMap.has(asset.parentId)) {
+      assetMap.set(asset.parentId, []);
+    }
+    assetMap.get(asset.parentId).push({
+      ...asset,
+      children: [],
+      category: determineAssetCategory(asset.sensorType),
+    });
+  });
+
+  return { locationMap, assetMap };
+}
+
+export function findAllChildren(
+  locations: LocationType[],
+  assets: AssetType[],
+  rootItem: TreeItem
+) {
+  const { locationMap, assetMap } = buildChildrenMap(locations, assets);
+  const stack = [rootItem];
+  const visited = new Set();
+
+  while (stack.length > 0) {
+    const node = stack.pop();
+    if (node) {
+      const nodeId = node.id;
+
+      if (visited.has(nodeId)) continue;
+      visited.add(nodeId);
+
+      const children = [
+        ...(locationMap.get(nodeId) || []),
+        ...(assetMap.get(nodeId) || []),
+      ];
+
+      node.children = children;
+      stack.push(...children);
+    }
+  }
+
+  return rootItem.children;
+}
+
+// export function findAllChildren(
+//   locations: LocationType[],
+//   assets: AssetType[],
+//   item: TreeItem
+// ): TreeItem[] {
+//   const children = findChildren(
+//     locations,
+//     assets,
+//     item.id,
+//     item.locationId || '0',
+//     item.lineage
+//   );
+
+//   if (children.length === 0) {
+//     return children;
+//   }
+
+//   return children.map((child) => {
+//     return { ...child, children: findAllChildren(locations, assets, child) };
+//   });
+// }
+
 export function getRoot(
   locations: LocationType[],
   assets: AssetType[]

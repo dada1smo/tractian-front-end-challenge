@@ -62,6 +62,7 @@ const UIButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
       asChild = false,
       link,
       children,
+      type = 'button',
       ...props
     },
     ref
@@ -109,6 +110,7 @@ const UIButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        type={type}
         {...props}
       >
         {link?.href ? (

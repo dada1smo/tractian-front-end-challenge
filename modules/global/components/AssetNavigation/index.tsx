@@ -34,6 +34,8 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
     handleFilterBySensorType,
     filterType,
     handleFilterByStatus,
+    handleFilterByName,
+    clearFilters,
   } = useAssetFilter(tree, rawLocations, rawAssets);
   const { selectAsset, selected } = useAssetSelection();
 
@@ -86,7 +88,10 @@ const AssetNavigation: FunctionComponent<AssetNavigationProps> = ({
       <div className="grid grid-cols-12 gap-4 overflow-hidden h-full grow">
         <div className="overflow-hidden col-span-4">
           <div className="border border-border-card rounded-xs overflow-hidden h-full">
-            <AssetNameFilter />
+            <AssetNameFilter
+              handleFilterByName={handleFilterByName}
+              clearFilters={clearFilters}
+            />
             <div className="overflow-y-auto h-full py-2 px-3 border-t border-border-card">
               <AssetTree
                 tree={filteredTree}
